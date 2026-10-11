@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Портфолио веб-разработчика Бурдуковской Софии">
+    <title>Бурдуковская София — веб-разработчик</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+</head>
+<body>
+
+    <!-- ССЫЛКА «К СОДЕРЖИМОМУ» ДЛЯ КЛАВИАТУРЫ -->
+    <a href="#main" class="skip-link">Перейти к содержимому</a>
+
+    <!-- ПАНЕЛЬ ДОСТУПНОСТИ -->
+    <button id="a11y-open" class="a11y-fab" aria-label="Открыть панель доступности" title="Настройки для слабовидящих">
+        ♿
+    </button>
+
+    <aside id="a11y-panel" class="a11y-panel" role="dialog" aria-label="Панель доступности" aria-hidden="true">
+        <div class="a11y-header">
+            <h2>Доступность</h2>
+            <button id="a11y-close" class="a11y-close" aria-label="Закрыть панель">✕</button>
+        </div>
+
+        <!-- 1. РАЗМЕР ШРИФТА -->
+        <div class="a11y-group">
+            <p class="a11y-label">Размер шрифта</p>
+            <div class="a11y-row">
+                <button id="font-down" aria-label="Уменьшить шрифт">A−</button>
+                <button id="font-reset" aria-label="Обычный размер шрифта">A</button>
+                <button id="font-up" aria-label="Увеличить шрифт">A+</button>
+            </div>
+        </div>
+
+        <!-- 2. КОНТРАСТНОСТЬ -->
+        <div class="a11y-group">
+            <p class="a11y-label">Контрастность</p>
+            <div class="a11y-row">
+                <button id="contrast-toggle" aria-pressed="false">Высокая контрастность</button>
+            </div>
+        </div>
+
+        <!-- 3. СКРИНРИДЕР -->
+        <div class="a11y-group">
+            <p class="a11y-label">Читать вслух (скринридер)</p>
+            <div class="a11y-row">
+                <button id="sr-play" aria-label="Начать чтение">▶ Читать</button>
+                <button id="sr-pause" aria-label="Пауза">⏸ Пауза</button>
+                <button id="sr-stop" aria-label="Остановить чтение">■ Стоп</button>
+            </div>
+            <div class="a11y-row">
+                <button id="sr-prev" aria-label="Предыдущий блок">◀ Назад</button>
+                <button id="sr-next" aria-label="Следующий блок">Вперёд ▶</button>
+            </div>
+
+            <label for="sr-voice" class="a11y-label">Голос</label>
+            <select id="sr-voice"></select>
+
+            <label for="sr-rate" class="a11y-label">Скорость: <span id="sr-rate-value">1.0×</span></label>
+            <input id="sr-rate" type="range" min="0.5" max="2" step="0.1" value="1">
+        </div>
+    </aside>
+
+    <!-- ШАПКА -->
+    <header>
+        <button id="theme-toggle" title="Сменить тему" aria-label="Сменить тему">🌙</button>
+        <nav aria-label="Основная навигация">
+            <a href="#about">Обо мне</a>
+            <a href="#skills">Навыки</a>
+            <a href="#projects">Проекты</a>
+            <a href="#contacts">Контакты</a>
+        </nav>
+        <h1>Бурдуковская София</h1>
+        <p>Начинающий веб-разработчик</p>
+    </header>
+
+    <main id="main">
+        <!-- ОБО МНЕ -->
+        <section id="about" aria-labelledby="about-title">
+            <img src="sofia.jpg" alt="Фото Бурдуковской Софии" width="240" height="240">
+            <div>
+                <h2 id="about-title">Обо мне</h2>
+                <p>Привет! Я изучаю <strong>веб-разработку</strong> и создаю сайты
+                   на <em>HTML</em>. Также занимаюсь бренд-дизайном, работаю в Photoshop
+                   и практикуюсь в фотографии.</p>
+            </div>
+        </section>
+
+        <!-- НАВЫКИ -->
+        <section id="skills" aria-labelledby="skills-title">
+            <h2 id="skills-title">Навыки</h2>
+            <ul>
+                <li>HTML5</li>
+                <li>Бренд-дизайн</li>
+                <li>Photoshop</li>
+            </ul>
+        </section>
+
+        <!-- ПРОЕКТЫ -->
+        <section id="projects" aria-labelledby="projects-title">
+            <h2 id="projects-title">Мои проекты</h2>
+            <article>
+                <h3>Бренд-дизайн</h3>
+                <p>Брендинг логотипа компании.</p>
+                <a href="https://taupe-begonia-6cbeef.netlify.app/" aria-label="Смотреть проект: Бренд-дизайн">
+                    Смотреть проект →
+                </a>
+            </article>
+            <article>
+                <h3>Photoshop</h3>
+                <p>Работы в фотошопе.</p>
+                <a href="https://taupe-begonia-6cbeef.netlify.app/" aria-label="Смотреть проект: Работы в Photoshop">
+                    Смотреть проект →
+                </a>
+            </article>
+        </section>
+
+        <!-- КОНТАКТЫ -->
+        <section id="contacts" aria-labelledby="contacts-title">
+            <h2 id="contacts-title">Связаться со мной</h2>
+            <form action="#" method="POST">
+                <label for="name">Имя</label>
+                <input type="text" id="name" name="name" placeholder="Как вас зовут?" required autocomplete="name">
+
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" placeholder="you@mail.ru" required autocomplete="email">
+
+                <label for="msg">Сообщение</label>
+                <textarea id="msg" name="message" rows="4" placeholder="Ваше сообщение..." required></textarea>
+
+                <button type="submit">Отправить</button>
+            </form>
+            <p id="form-status" role="status" aria-live="polite"></p>
+        </section>
+    </main>
+
+    <!-- ПОДВАЛ -->
+    <footer>
+        <p>© <span id="year">2026</span> Бурдуковская София. Учебный проект.</p>
+    </footer>
+
+    <!-- КНОПКА «НАВЕРХ» -->
+    <button id="to-top" title="Наверх" aria-label="Наверх">↑</button>
+
+    <!-- JAVASCRIPT -->
+    <script src="js/script.js" defer></script>
+</body>
+</html>
