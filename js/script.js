@@ -34,11 +34,26 @@ const statusMsg = document.querySelector('#form-status');
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     const name = document.querySelector('#name').value.trim();
-    statusMsg.textContent = `Спасибо, ${name}! Сообщение отправлено.`;
-    statusMsg.classList.add('visible');
-    form.reset();
-});
 
+    fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).then(response => {
+        if (response.ok) {
+            statusMsg.textContent = `Спасибо, ${name}! Сообщение отправлено.`;
+            form.reset();
+        } else {
+            statusMsg.textContent = 'Ошибка отправки. Попробуйте позже.';
+        }
+        statusMsg.classList.add('visible');
+    }).catch(() => {
+        statusMsg.textContent = 'Ошибка сети. Проверьте подключение.';
+        statusMsg.classList.add('visible');
+    });
+});
 
 // ====================================================
 // 4. КНОПКА «НАВЕРХ»
