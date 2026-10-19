@@ -28,43 +28,46 @@ if (localStorage.getItem('theme') === 'dark') applyTheme(true);
 // ====================================================
 // 3. ОТПРАВКА ФОРМЫ
 // ====================================================
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    
-    statusMsg.textContent = 'Отправка...';
-    statusMsg.classList.remove('visible');
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Отправка...';
+const form = document.querySelector('form');
+const statusMsg = document.querySelector('#form-status');
 
-    try {
-        const response = await fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
+if (form && statusMsg) {
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Отменяем перезагрузку страницы
 
-        if (response.ok) {
-            const name = document.querySelector('#name').value.trim();
-            statusMsg.textContent = `Спасибо, ${name}! Сообщение отправлено.`;
-            statusMsg.classList.add('visible');
-            form.reset();
-        } else {
-            statusMsg.textContent = 'Ошибка отправки. Попробуйте позже.';
-            statusMsg.classList.add('visible');
-        }
-    } catch (error) {
-        statusMsg.textContent = 'Ошибка сети. Проверьте подключение.';
+        const formData = new FormData(form);
+
+        // Показываем сообщение "Отправка..."
+        statusMsg.classList.remove('visible');
+        statusMsg.textContent = 'Отправка...';
         statusMsg.classList.add('visible');
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-    }
-});
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // Успех
+                const nameInput = document.querySelector('#name');
+                const name = nameInput.value.trim();
+                
+                statusMsg.textContent = `Спасибо, ${name}! Сообщение отправлено.`;
+                form.reset();
+            } else {
+                // Ошибка от Formspree
+                statusMsg.textContent = 'Ой, что-то пошло не так. Попробуйте ещё раз.';
+            }
+        } catch (error) {
+            // Ошибка сети (например, пропал интернет)
+            statusMsg.textContent = 'Ошибка сети. Проверьте подключение к интернету.';
+        }
+    });
+}
 
 // ====================================================
 // 4. КНОПКА «НАВЕРХ»
