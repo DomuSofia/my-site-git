@@ -28,31 +28,42 @@ if (localStorage.getItem('theme') === 'dark') applyTheme(true);
 // ====================================================
 // 3. ОТПРАВКА ФОРМЫ
 // ====================================================
-const form = document.querySelector('form');
-const statusMsg = document.querySelector('#form-status');
-
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const name = document.querySelector('#name').value.trim();
+    
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    
+    statusMsg.textContent = 'Отправка...';
+    statusMsg.classList.remove('visible');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Отправка...';
 
-    fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: {
-            'Accept': 'application/json'
-        }
-    }).then(response => {
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
         if (response.ok) {
+            const name = document.querySelector('#name').value.trim();
             statusMsg.textContent = `Спасибо, ${name}! Сообщение отправлено.`;
+            statusMsg.classList.add('visible');
             form.reset();
         } else {
             statusMsg.textContent = 'Ошибка отправки. Попробуйте позже.';
+            statusMsg.classList.add('visible');
         }
-        statusMsg.classList.add('visible');
-    }).catch(() => {
+    } catch (error) {
         statusMsg.textContent = 'Ошибка сети. Проверьте подключение.';
         statusMsg.classList.add('visible');
-    });
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    }
 });
 
 // ====================================================
