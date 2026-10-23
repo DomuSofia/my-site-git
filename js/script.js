@@ -24,47 +24,46 @@ themeBtn.addEventListener('click', () => {
 
 if (localStorage.getItem('theme') === 'dark') applyTheme(true);
 
-
 // ====================================================
-// 3. ОТПРАВКА ФОРМЫ
+// 3. ОТПРАВКА ФОРМЫ (POST-запрос по шаблону из конспекта)
 // ====================================================
 const form = document.querySelector('form');
 const statusMsg = document.querySelector('#form-status');
 
 if (form && statusMsg) {
     form.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Отменяем перезагрузку страницы
+        event.preventDefault(); 
 
+        // 1. Собираем данные из формы в объект
         const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries()); // Превращаем в обычный объект {name: "...", email: "..."}
 
-        // Показываем сообщение "Отправка..."
         statusMsg.classList.remove('visible');
         statusMsg.textContent = 'Отправка...';
         statusMsg.classList.add('visible');
 
         try {
+            // 2. Делаем POST-запрос с заголовком Content-Type, как в конспекте
             const response = await fetch(form.action, {
                 method: 'POST',
-                body: formData,
                 headers: {
+                    'Content-Type': 'application/json', // Важно!
                     'Accept': 'application/json'
-                }
+                },
+                body: JSON.stringify(data) // Превращаем объект в JSON-строку
             });
 
-            if (response.ok) {
-                // Успех
-                const nameInput = document.querySelector('#name');
-                const name = nameInput.value.trim();
-                
-                statusMsg.textContent = `Спасибо, ${name}! Сообщение отправлено.`;
-                form.reset();
-            } else {
-                // Ошибка от Formspree
-                statusMsg.textContent = 'Ой, что-то пошло не так. Попробуйте ещё раз.';
+            if (!response.ok) {
+                throw new Error(`Ошибка сервера: ${response.status}`);
             }
+
+            // Если всё ок
+            statusMsg.textContent = `Спасибо, ${data.name}! Сообщение отправлено.`;
+            form.reset();
+            
         } catch (error) {
-            // Ошибка сети (например, пропал интернет)
-            statusMsg.textContent = 'Ошибка сети. Проверьте подключение к интернету.';
+            console.error('Ошибка при отправке:', error);
+            statusMsg.textContent = 'Ошибка сети или сервера. Попробуйте позже.';
         }
     });
 }
@@ -329,21 +328,38 @@ if (factBtn) {
 }
 
 // ====================================================
-// 10. ВИДЖЕТ: ПРОФИЛЬ GITHUB
+// 10. ВИДЖЕТ: ПРОФИЛЬ GITHUB (Шаблон из конспекта)
 // ====================================================
-const GITHUB_USERNAME = 'domusofia'; // Ваш логин
+const GITHUB_USERNAME = 'domusofia';
 
+// Шаг 1: Функция только загружает данные (как в конспекте)
+async function loadUser(login) {
+    try {
+        const response = await fetch(`https://api.github.com/users/${login}`);
+        
+        // Проверка на 404 и 500 (Ловушка 1 и 2)
+        if (!response.ok) {
+            throw new Error(`Ошибка сервера: ${response.status}`);
+        }
+        
+        return await response.json(); // Данные — наружу
+    } catch (error) {
+        console.error('Не удалось загрузить профиль:', error);
+        return null; // Сигнал неудачи
+    }
+}
+
+// Шаг 2: Функция отрисовывает интерфейс
 async function loadGitHub() {
     const box = document.querySelector('#github-box');
-    if(!box) return;
+    if (!box) return;
 
-    try {
-        const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
-        if (!response.ok) throw new Error(`Ошибка сервера: ${response.status}`);
+    // Ждем данные из первой функции
+    const user = await loadUser(GITHUB_USERNAME);
 
-        const user = await response.json();
-
-        box.innerHTML = '';
+    if (user) {
+        // Если данные пришли — рисуем (Защита от XSS)
+        box.innerHTML = ''; // Очищаем "Загружаю..."
 
         const img = document.createElement('img');
         img.src = user.avatar_url;
@@ -351,7 +367,7 @@ async function loadGitHub() {
 
         const info = document.createElement('p');
         info.textContent = `${user.name ?? user.login} · репозиториев: ${user.public_repos}`;
-        info.style.margin = '0'; // Убираем лишние отступы
+        info.style.margin = '0';
 
         const link = document.createElement('a');
         link.href = user.html_url;
@@ -360,12 +376,11 @@ async function loadGitHub() {
         link.textContent = 'Открыть профиль →';
         link.style.color = 'var(--color-main)';
         link.style.fontWeight = 'bold';
-        link.style.width = '100%'; // Ссылка на новую строку
 
         box.append(img, info, link);
-    } catch (error) {
+    } else {
+        // Если вернулся null (ошибка)
         box.textContent = 'Профиль не найден. Проверьте логин.';
-        console.error(error);
     }
 }
 
