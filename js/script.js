@@ -296,3 +296,77 @@ rateVal.textContent = parseFloat(rateInp.value).toFixed(1) + '×';
 
 // Стоп при закрытии страницы
 window.addEventListener('beforeunload', () => synth.cancel());
+
+// ====================================================
+// 9. ВИДЖЕТ: СЛУЧАЙНЫЙ ФАКТ
+// ====================================================
+const factBtn = document.querySelector('#fact-btn');
+const factText = document.querySelector('#fact-text');
+
+async function loadFact() {
+    if(!factBtn || !factText) return; // Защита, если элементов нет
+
+    factBtn.disabled = true;
+    factText.textContent = 'Загружаю...';
+
+    try {
+        const response = await fetch('https://catfact.ninja/fact');
+        if (!response.ok) throw new Error(`Ошибка сервера: ${response.status}`);
+        
+        const data = await response.json();
+        factText.textContent = data.fact;
+    } catch (error) {
+        factText.textContent = 'Не удалось загрузить факт. Попробуйте ещё раз.';
+        console.error(error);
+    } finally {
+        factBtn.disabled = false;
+    }
+}
+
+if (factBtn) {
+    factBtn.addEventListener('click', loadFact);
+    loadFact(); // Первый факт сразу
+}
+
+// ====================================================
+// 10. ВИДЖЕТ: ПРОФИЛЬ GITHUB
+// ====================================================
+const GITHUB_USERNAME = 'domusofia'; // Ваш логин
+
+async function loadGitHub() {
+    const box = document.querySelector('#github-box');
+    if(!box) return;
+
+    try {
+        const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+        if (!response.ok) throw new Error(`Ошибка сервера: ${response.status}`);
+
+        const user = await response.json();
+
+        box.innerHTML = '';
+
+        const img = document.createElement('img');
+        img.src = user.avatar_url;
+        img.alt = `Аватар пользователя ${user.login}`;
+
+        const info = document.createElement('p');
+        info.textContent = `${user.name ?? user.login} · репозиториев: ${user.public_repos}`;
+        info.style.margin = '0'; // Убираем лишние отступы
+
+        const link = document.createElement('a');
+        link.href = user.html_url;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = 'Открыть профиль →';
+        link.style.color = 'var(--color-main)';
+        link.style.fontWeight = 'bold';
+        link.style.width = '100%'; // Ссылка на новую строку
+
+        box.append(img, info, link);
+    } catch (error) {
+        box.textContent = 'Профиль не найден. Проверьте логин.';
+        console.error(error);
+    }
+}
+
+loadGitHub();

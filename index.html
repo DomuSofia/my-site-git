@@ -134,7 +134,25 @@
             </form>
             <p id="form-status" role="status" aria-live="polite"></p>
         </section>
-    </main>
+        <!-- ВСТАВЛЯЕМ ВИДЖЕТЫ ЗДЕСЬ -->
+        <section id="widgets" aria-labelledby="widgets-title">
+            <h2 id="widgets-title">Живые виджеты</h2>
+
+            <div class="widgets-grid">
+                <!-- Виджет 1: случайный факт -->
+                <article>
+                    <h3><span aria-hidden="true">🐱</span> Факт дня</h3>
+                    <p id="fact-text">Нажмите кнопку, чтобы загрузить факт о котах</p>
+                    <button id="fact-btn" type="button">Новый факт</button>
+                </article>
+
+                <!-- Виджет 2: профиль GitHub -->
+                <article>
+                    <h3><span aria-hidden="true">👨‍💻</span> Мой GitHub</h3>
+                    <div id="github-box">Загружаю профиль...</div>
+                </article>
+            </div>
+        </section>
 
     <!-- ПОДВАЛ -->
     <footer>

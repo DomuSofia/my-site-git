@@ -423,3 +423,39 @@ footer {
     .a11y-fab { top: 12px; left: 12px; width: 46px; height: 46px; font-size: 22px; }
     .a11y-panel { width: 100vw; }
 }
+
+/* ============ 9. ВИДЖЕТЫ ============ */
+.widgets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+#widgets h2 { /* Применяем стили заголовка как у других секций */
+    color: var(--color-text);
+    border-bottom: 3px solid var(--color-main);
+    padding-bottom: 8px;
+    display: inline-block;
+    margin-top: 0;
+    font-size: 2rem;
+}
+
+#github-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+#github-box img {
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;      
+}
