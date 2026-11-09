@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Компоненты — портфолио</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css"> <!-- стили только для компонентов -->
+</head>
+<body>
+
+    <!-- 1. АДАПТИВНОЕ МЕНЮ (БУРГЕР) -->
+    <header class="site-header">
+        <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav">
+            <span class="menu-toggle__icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Меню</span>
+        </button>
+        <nav id="site-nav" class="site-nav">
+            <a href="#about">Обо мне</a>
+            <a href="#skills">Навыки</a>
+            <a href="#projects">Проекты</a>
+            <a href="#contacts">Контакты</a>
+        </nav>
+    </header>
+
+    <!-- 2. МОДАЛЬНОЕ ОКНО «НАПИСАТЬ МНЕ» -->
+    <button class="btn" data-open-modal="#modal-contact">Написать мне</button>
+
+    <div id="modal-contact" class="modal-overlay" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <h2 id="modal-title">Написать мне</h2>
+            <form class="modal__form">
+                <label for="m-name">Имя</label>
+                <input type="text" id="m-name" required>
+                <label for="m-phone">Телефон</label>
+                <input type="tel" id="m-phone" required>
+                <button type="submit">Отправить</button>
+            </form>
+            <button class="modal__close" data-close-modal aria-label="Закрыть окно">✕</button>
+        </div>
+    </div>
+
+    <!-- 3. СЛАЙДЕР -->
+    <section class="slider" aria-label="Примеры работ">
+        <div class="slider__viewport">
+            <div class="slider__track">
+                <div class="slider__slide">Слайд 1: Сайт кофейни</div>
+                <div class="slider__slide">Слайд 2: Блог о путешествиях</div>
+                <div class="slider__slide">Слайд 3: Список книг</div>
+            </div>
+        </div>
+        <button class="slider__btn slider__btn--prev" aria-label="Предыдущий слайд">‹</button>
+        <button class="slider__btn slider__btn--next" aria-label="Следующий слайд">›</button>
+        <div class="slider__dots" role="tablist" aria-label="Навигация по слайдам"></div>
+    </section>
+
+    <!-- 4. ТАБЫ -->
+    <div class="tabs">
+        <div class="tabs__list" role="tablist" aria-label="Информация о проекте">
+            <button class="tabs__tab is-active" role="tab" aria-selected="true" aria-controls="tab-1" id="tab-btn-1">Описание</button>
+            <button class="tabs__tab" role="tab" aria-selected="false" aria-controls="tab-2" id="tab-btn-2">Характеристики</button>
+            <button class="tabs__tab" role="tab" aria-selected="false" aria-controls="tab-3" id="tab-btn-3">Отзывы</button>
+        </div>
+        <div class="tabs__panel" id="tab-1" role="tabpanel" aria-labelledby="tab-btn-1">Текст описания…</div>
+        <div class="tabs__panel" id="tab-2" role="tabpanel" aria-labelledby="tab-btn-2" hidden>Список характеристик…</div>
+        <div class="tabs__panel" id="tab-3" role="tabpanel" aria-labelledby="tab-btn-3" hidden>Отзывы…</div>
+    </div>
+
+    <script src="js/components.js" defer></script>
+</body>
+</html>
