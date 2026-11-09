@@ -382,6 +382,79 @@ async function loadGitHub() {
         // Если вернулся null (ошибка)
         box.textContent = 'Профиль не найден. Проверьте логин.';
     }
+
 }
+
+// ====================================================
+// 11. МОДАЛЬНОЕ ОКНО
+// ====================================================
+const modalOpeners = document.querySelectorAll('[data-open-modal]');
+const modalClosers = document.querySelectorAll('[data-close-modal]');
+let lastFocusedEl = null;
+
+function openModal(modal) {
+    lastFocusedEl = document.activeElement;
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    const first = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    (first || modal).focus();
+    modal.addEventListener('keydown', trapFocus);
+}
+
+function closeModal(modal) {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    lastFocusedEl?.focus();
+    modal.removeEventListener('keydown', trapFocus);
+}
+
+function trapFocus(e) {
+    if (e.key !== 'Tab') return;
+    const modal = e.currentTarget;
+    const focusable = [...modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+        .filter(el => !el.disabled && el.offsetParent !== null);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+    }
+}
+
+modalOpeners.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const modal = document.querySelector(btn.dataset.openModal);
+        if (modal) openModal(modal);
+    });
+});
+modalClosers.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const overlay = btn.closest('.modal-overlay');
+        if (overlay) closeModal(overlay);
+    });
+});
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal(overlay);
+    });
+});
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay:not([hidden])').forEach(closeModal);
+    }
+});
+
+// Форма внутри модалки (демо)
+document.querySelectorAll('.modal__form').forEach(f => {
+    f.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const overlay = f.closest('.modal-overlay');
+        if (overlay) closeModal(overlay);
+    });
 
 loadGitHub();
